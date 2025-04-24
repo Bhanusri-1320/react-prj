@@ -113,3 +113,4 @@ Angular is a full-fledged frontend framework developed and maintained by Google.
 - Built-in routing, SSR, static generation, and more
 - Great for apps that need SEO or backend functionality
 - Slightly steeper learning curve, but powerful
+
