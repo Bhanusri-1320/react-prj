@@ -770,3 +770,5 @@ export default Exercise
     </Exercise>
 ```
 - since we already have alert button we are using it.
+- Till now when we click on the X(close) button it is not getting closed so we have to implement it.
+- Implementing close functionality.
