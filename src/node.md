@@ -604,3 +604,169 @@ export default App
 
 -------------------------------------------------
 # Passing Children:
+- If we want to pass the data dynamically
+```js
+interface props {
+    message: string
+}
+
+function Alert({ message }: props) {
+    return (
+        <div className="alert alert-primary">{message}</div>
+    )
+}
+export default Alert
+-----------------------------------
+    <Alert message='Alert!' />
+```
+- we can pass like this "<Alert message='Alert!' />"
+- but if we want to pass like a children
+- then we can use a special prop that all components support called children
+``` js
+    <Alert>Alert!</Alert> // we are passing a string child to alert component
+
+interface props {
+    children: string
+}
+
+function Alert({ children }: props) {
+    return (
+        <div className="alert alert-primary">{children}</div>
+    )
+}
+export default Alert
+```
+- but what if we want a complex thing to pass in the child like
+
+```js
+    <Alert>Hello <span>World</span></Alert>
+```
+- then the children type is not string so we have to change the type to "ReactNode"
+```js
+import { ReactNode } from "react"
+
+interface props {
+    children: ReactNode
+}
+
+function Alert({ children }: props) {
+    return (
+        <div className="alert alert-primary">{children}</div>
+    )
+}
+export default Alert
+```
+- so using children prop we can pass children to a component
+
+--------------------------------------------------------------------------------
+# Inspecting Components with React dev tools:
+- in inspect >> -> components
+- then it will show you the hiararchy of the components in react(component tree)
+
+----------------------------------------------------
+# Exercise: Building a button component:
+- giving default value to the color:
+```js 
+function Button({ children, onButtonClick, color = 'primary' }: props) 
+```
+- Button component:
+```js
+import { Children } from "react";
+
+interface props {
+    children: string;
+    color: string;
+    onButtonClick: () => void
+}
+function Button({ children, onButtonClick, color = 'primary' }: props) {
+    return (
+        <button className={"btn btn-" + color} onClick={onButtonClick}>{children}</button>
+    )
+}
+export default Button
+```
+- App component
+```js
+  const handleButtonClick = () => console.log("Button Clicked");
+    <Button onButtonClick={handleButtonClick} color='success'>Button </Button>
+```
+
+```js 
+ {/* <ListGroup items={items} heading='Cities' onSelectItem={handleOnSelectItem} /> */}
+    {/* <Alert>Hello <span>World</span></Alert> */}
+
+```
+- button component:
+```js
+import { Children } from "react";
+
+interface props {
+    children: string;
+    color: string;
+    onButtonClick: () => void
+}
+function Button({ children, onButtonClick, color = 'primary' }: props) {
+    return (
+        <button className={"btn btn-" + color} onClick={onButtonClick}>{children}</button>
+    )
+}
+export default Button
+```
+
+- app before bexercise:
+```js
+
+import Alert from './components/Alert';
+import Button from './components/Button';
+import ListGroup from './components/ListGroup'
+function App() {
+  const items = ["Tokyo", "Paris", "Nairobi", "São Paulo", "Vancouver"];
+  const handleOnSelectItem = (item: string) => {
+    console.log(item);
+  }
+  const handleButtonClick = () => console.log("Button Clicked");
+  return <div>
+    <h1>MY APP</h1>
+    <ListGroup items={items} heading='Cities' onSelectItem={handleOnSelectItem} />
+    <Alert>Hello <span>World</span></Alert>
+    <Button onButtonClick={handleButtonClick} color='success'>Button </Button>
+  </div>
+}
+export default App
+```
+
+------------------------------------------------------------------------------
+# Excercise:
+- building a component when i click on button it should show the alert
+```js
+import { useState } from "react";
+import Alert from "./Alert";
+
+interface props {
+    children: string;
+    color: string;
+    // onButtonClick: () => void;
+    // flag: boolean;
+}
+function Exercise({ children, color = 'primary' }: props) {
+    const [flag, setFlag] = useState(false);
+    const handleButtonClick = () => {
+        return flag ? <Alert>Button Clicked</Alert> : null;
+    }
+
+    return (
+        <>
+            {handleButtonClick()}
+            <button className={"btn btn-" + color} onClick={() => { setFlag(true) }}>{children}</button>
+        </>
+    )
+}
+export default Exercise
+```
+- app component:
+```js
+<Exercise  color='success' >
+      Button
+    </Exercise>
+```
+- since we already have alert button we are using it.
