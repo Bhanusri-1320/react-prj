@@ -1,4 +1,14 @@
 # "npm run dev"
+# Set up with vite:
+- open cmd and run - npm create vite@latest
+- give prj name
+- framer work: select react
+- varient: TS
+- cd prj_name
+- npm install 
+- code .
+
+--------------------------------------------------------------------
 
 Angular and React are both popular frameworks/libraries used for building web applications, but they have some significant differences in terms of their design philosophy, architecture, and usage. Here's a breakdown of the main differences:
 
