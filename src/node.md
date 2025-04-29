@@ -367,3 +367,240 @@ handleClick() is the event handler for the click event.
 ------------------------------------------------------------------------------
 
 # Managing State:
+
+- I want to heighlight the item which is being clicked at a time for that we ca use active class name 
+```js
+    {items.map((item: any) => (<li className="list-group-item active" key={item} onClick={handelClick}>{item}</li>))}
+```
+
+- to heightlight the item when it is clicked on 
+```js
+function ListGroup() {
+    let items: any = []
+    items = ["Tokyo", "Paris", "Nairobi", "São Paulo", "Vancouver"]
+    // if (items.length === 0) return <><h1>List</h1><p>No items found</p></>
+    let selectedIndex = -1;// 0 means 1st item so -1
+    const getMessage = () => {
+        return items.length === 0 && <p>No items found</p>
+    }
+    const handelClick = (item: any) => {
+        console.log(item)
+        selectedIndex = items.indexOf(item);
+    }
+    return (
+        <>
+            <h1>List</h1>
+            {getMessage()}
+            <ul className="list-group">
+                {items.map((item: any, index: any) => (<li className={selectedIndex === index ? "list-group-item active" : "list-group-item"} key={item} onClick={() => { selectedIndex = index }}>{item}</li>))}
+            </ul>
+        </>
+    )
+
+}
+export default ListGroup
+```
+- this doesn't work because of the selectedIndex var
+- You're using a regular variable (selectedIndex = -1) to track the selected item.
+- However, React needs state to keep track of values and automatically update the UI when something changes.
+- A regular variable (like selectedIndex) doesn't tell React to update the component when its value changes. This is why the highlighting is not working.
+- To overcome this problem we have to tell react that this component is having data that can  change over time
+- To do that we ahve to use one of the buit in function called "useState"
+- This is called Hook this will allow us to use the built in fns in react
+- Instead of writing a var 
+```js
+const arr=useState(-1)// -1 is the initial value and it returns an array
+arr[0]// var like selectedIndex
+arr[1]// updater function
+// using updater function we can update the var then react will get notified like there is a change in the var then it will rerender that compomnent
+```
+- this is the update code for heighlighting
+
+```js
+import { useState } from "react";
+
+function ListGroup() {
+    let items: any = []
+    items = ["Tokyo", "Paris", "Nairobi", "São Paulo", "Vancouver"]
+    // if (items.length === 0) return <><h1>List</h1><p>No items found</p></>
+    // let selectedIndex = -1;// 0 means 1st item so -1
+    const getMessage = () => {
+        return items.length === 0 && <p>No items found</p>
+    }
+    const [selectedIndex, setSelectedIndex] = useState(-1);
+
+    return (
+        <>
+            <h1>List</h1>
+            {getMessage()}
+            <ul className="list-group">
+                {items.map((item: any, index: any) => (<li className={selectedIndex === index ? "list-group-item active" : "list-group-item"} key={item} onClick={() => { setSelectedIndex(index) }}>{item}</li>))}
+            </ul>
+        </>
+    )
+
+}
+export default ListGroup
+```
+- So when the we click the onClick even is triggered it will call the setSelectedIndex function and updates the selectIndex to the parameter passed to that method
+- each component has diff state lets say we have another component in app.tsx those 2 components will have diff states
+```js
+import ListGroup from './components/ListGroup'
+function App() {
+  return <div>
+    <h1>MY APP</h1>
+    <ListGroup />// will have diff state
+    <ListGroup />// will have diff state
+  </div>
+}
+export default App
+```
+
+# Passing Data via Props:
+- now we are displaying the list of cities in list but what if we want to display list of names/colors then we use props for that to make the component reusable
+- Props are inputs to our component
+- we will define the inputs in interface 
+```js
+interface Prop{
+    items:string[];
+    heading:string;
+}
+```
+- we need to pass the data from app component
+```js
+    <ListGroup items={items} heading='Cities' />
+
+import { useState } from "react";
+interface ListGroupProps {
+    items: string[];
+    heading: string;
+}
+
+
+function ListGroup(props: ListGroupProps) {
+    // if (items.length === 0) return <><h1>List</h1><p>No items found</p></>
+    // let selectedIndex = -1;// 0 means 1st item so -1
+    const { items, heading } = props;
+    const getMessage = () => {
+        return items.length === 0 && <p>No items found</p>
+    }
+    const [selectedIndex, setSelectedIndex] = useState(-1);
+
+    return (
+        <>
+            <h1>{heading}</h1>
+            {getMessage()}
+            <ul className="list-group">
+                {items.map((item: any, index: any) => (<li className={selectedIndex === index ? "list-group-item active" : "list-group-item"} key={item} onClick={() => { setSelectedIndex(index) }}>{item}</li>))}
+            </ul>
+        </>
+    )
+
+}
+export default ListGroup
+```
+
+# Diff b/w Props and Interfaces:
+## Props:
+- Definition: Short for "properties", props are the actual data/values passed to a React component.
+
+- Purpose: Used to customize a component’s behavior or display.
+
+- Example:
+
+```js
+function Greeting(props: { name: string }) {
+  return <h1>Hello, {props.name}!</h1>;
+}
+
+// Usage
+<Greeting name="Alice" />
+```
+
+## Interfaces:
+- Definition: A TypeScript feature used to define the shape of an object.
+
+- Purpose: Helps with type checking and code readability.
+
+- In React: Often used to define the type of props that a component expects.
+
+- Example with interface:
+```js
+interface GreetingProps {
+  name: string;
+}
+
+function Greeting(props: GreetingProps) {
+  return <h1>Hello, {props.name}!</h1>;
+}
+```
+
+
+# Passing functions via props:
+- passing a function via props means when the use clicks on one of the list item something should happen like redirecting to another page or some thing like that
+- for that we added one fn to the props
+- and when click happens that fn should be called
+- in the app component that fn is implemented
+- then that will be executed
+- siply means the fn that has to be executed when the button is clicked is written in app component for making the list group reusable
+- and that fn is passed to the list grp component
+- when it calld that fn when the item is clicked
+```js
+import { useState } from "react";
+interface ListGroupProps {
+    items: string[];
+    heading: string;
+    onSelectItem: (item: string) => void;
+}
+
+
+function ListGroup(props: ListGroupProps) {
+    // if (items.length === 0) return <><h1>List</h1><p>No items found</p></>
+    // let selectedIndex = -1;// 0 means 1st item so -1
+    const { items, heading, onSelectItem } = props;
+    const getMessage = () => {
+        return items.length === 0 && <p>No items found</p>
+    }
+    const [selectedIndex, setSelectedIndex] = useState(-1);
+
+    return (
+        <>
+            <h1>{heading}</h1>
+            {getMessage()}
+            <ul className="list-group">
+                {items.map((item: any, index: any) => (<li className={selectedIndex === index ? "list-group-item active" : "list-group-item"} key={item} onClick={() => {
+                    setSelectedIndex(index)
+                    onSelectItem(item)
+                }}>{item}</li>))}
+            </ul>
+        </>
+    )
+
+}
+export default ListGroup
+```
+- App component
+
+```js
+import ListGroup from './components/ListGroup'
+function App() {
+  const items = ["Tokyo", "Paris", "Nairobi", "São Paulo", "Vancouver"];
+  const handleOnSelectItem = (item: string) => {
+    console.log(item);
+  }
+  return <div>
+    <h1>MY APP</h1>
+    <ListGroup items={items} heading='Cities' onSelectItem={handleOnSelectItem} />
+  </div>
+}
+export default App
+```
+-----------------------------------------------------------
+# State vs Props:
+- ![alt text](image-4.png)
+- ![alt text](image-5.png)
+- we can change the props but it is the principla that we should not chnage it
+- ![alt text](image-6.png)
+
+-------------------------------------------------
+# Passing Children:

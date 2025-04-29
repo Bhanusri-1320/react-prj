@@ -32,9 +32,18 @@
 // }
 
 // export default App
+import Alert from './components/Alert';
 import ListGroup from './components/ListGroup'
-function App()
-{
-  return <div><ListGroup></ListGroup></div>
+function App() {
+  const items = ["Tokyo", "Paris", "Nairobi", "São Paulo", "Vancouver"];
+  const handleOnSelectItem = (item: string) => {
+    console.log(item);
+  }
+  return <div>
+    <h1>MY APP</h1>
+    <ListGroup items={items} heading='Cities' onSelectItem={handleOnSelectItem} />
+    <br />
+    <Alert />
+  </div>
 }
 export default App
