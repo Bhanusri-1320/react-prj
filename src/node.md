@@ -8,6 +8,13 @@
 - npm install 
 - code .
 
+# Bootstrap:
+- for styling in react we use bootstrap
+- we should install it before using
+- npm i bootstrap
+- then we need to make some changes in css files
+- delete everything in app.css and index.css
+- and then in main.tsx we need to import "bootstrap/dist/css/bootstrap.css"
 --------------------------------------------------------------------
 
 Angular and React are both popular frameworks/libraries used for building web applications, but they have some significant differences in terms of their design philosophy, architecture, and usage. Here's a breakdown of the main differences:
